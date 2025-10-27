@@ -17,6 +17,7 @@ import {
   getStreakFlameColor,
   getStreakFlameSize,
   getTodayDate,
+  isValidPositiveNumber,
 } from './utils/storage';
 
 function App() {
@@ -97,10 +98,9 @@ function App() {
 
   // Add calorie intake
   const addCalorieIntake = () => {
-    const amount = parseInt(calorieAmount);
-    if (isNaN(amount) || amount <= 0) return;
+    if (!isValidPositiveNumber(calorieAmount)) return;
 
-    addCalorieEntry(amount, 'consumed', selectedMeal || null);
+    addCalorieEntry(parseInt(calorieAmount), 'consumed', selectedMeal || null);
     setDailyCalories(getDailyCalories());
     setCalorieAmount('');
     setSelectedMeal('');
@@ -109,11 +109,10 @@ function App() {
 
   // Update calorie goal
   const updateCalorieGoal = () => {
-    const goal = parseInt(newGoal);
-    if (isNaN(goal) || goal <= 0) return;
+    if (!isValidPositiveNumber(newGoal)) return;
 
-    setCalorieGoal(goal);
-    setCalorieGoalState(goal);
+    setCalorieGoal(parseInt(newGoal));
+    setCalorieGoalState(parseInt(newGoal));
     setNewGoal('');
     setShowGoalInput(false);
   };

@@ -9,19 +9,32 @@ const STORAGE_KEYS = {
   FRIENDS: 'fitstreak_friends',
 };
 
+// Constants
+const MAX_DAYS_WITHOUT_STREAK_RESET = 1;
+const CALORIE_ENTRY_TYPES = {
+  CONSUMED: 'consumed',
+  BURNED: 'burned',
+};
+
+// Validation helper
+export const isValidPositiveNumber = (value) => {
+  const num = parseInt(value);
+  return !isNaN(num) && num > 0;
+};
+
 // Get current date in YYYY-MM-DD format
 export const getTodayDate = () => {
   const today = new Date();
   return today.toISOString().split('T')[0];
 };
 
-// Calculate difference in days between two dates
-export const getDaysDifference = (date1, date2) => {
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
-  const diffTime = Math.abs(d2 - d1);
+// Calculate difference in days between two dates (date1 should be earlier than date2)
+export const getDaysDifference = (earlierDate, laterDate) => {
+  const d1 = new Date(earlierDate);
+  const d2 = new Date(laterDate);
+  const diffTime = d2 - d1;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+  return Math.max(0, diffDays);
 };
 
 // Streak Management
@@ -96,8 +109,8 @@ export const checkStreakValidity = () => {
 
   const daysSinceLastWorkout = getDaysDifference(lastWorkout, today);
   
-  // If more than 1 day has passed without a workout, reset streak
-  if (daysSinceLastWorkout > 1) {
+  // If more than MAX_DAYS_WITHOUT_STREAK_RESET day has passed without a workout, reset streak
+  if (daysSinceLastWorkout > MAX_DAYS_WITHOUT_STREAK_RESET) {
     setCurrentStreak(0);
   }
 };
@@ -149,7 +162,12 @@ export const setDailyCalories = (calorieData) => {
   localStorage.setItem(STORAGE_KEYS.DAILY_CALORIES, JSON.stringify(calorieData));
 };
 
-export const addCalorieEntry = (amount, type = 'consumed', meal = null) => {
+export const addCalorieEntry = (amount, type = CALORIE_ENTRY_TYPES.CONSUMED, meal = null) => {
+  // Validate type
+  if (!Object.values(CALORIE_ENTRY_TYPES).includes(type)) {
+    throw new Error(`Invalid calorie entry type: ${type}. Must be 'consumed' or 'burned'.`);
+  }
+
   const dailyData = getDailyCalories();
   const today = getTodayDate();
   
@@ -163,7 +181,7 @@ export const addCalorieEntry = (amount, type = 'consumed', meal = null) => {
   
   dailyData.entries.push(entry);
   
-  if (type === 'consumed') {
+  if (type === CALORIE_ENTRY_TYPES.CONSUMED) {
     dailyData.consumed += amount;
   } else {
     dailyData.burned += amount;
@@ -181,7 +199,7 @@ export const deleteCalorieEntry = (entryId) => {
   
   if (!entry) return dailyData;
   
-  if (entry.type === 'consumed') {
+  if (entry.type === CALORIE_ENTRY_TYPES.CONSUMED) {
     dailyData.consumed -= entry.amount;
   } else {
     dailyData.burned -= entry.amount;
