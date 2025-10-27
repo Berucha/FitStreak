@@ -1,4 +1,4 @@
-// Exercise Database - 32+ exercises across 8 body part categories
+// Exercise Database - 35 exercises across 8 body part categories
 // Each exercise includes: name, emoji icon, description, body part, and calorie estimate
 
 export const EXERCISE_LIBRARY = {

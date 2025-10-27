@@ -47,15 +47,21 @@ function App() {
   useEffect(() => {
     const savedData = localStorage.getItem('fitStreakData');
     if (savedData) {
-      const data = JSON.parse(savedData);
-      setCurrentStreak(data.currentStreak || 0);
-      setLongestStreak(data.longestStreak || 0);
-      setLastWorkoutDate(data.lastWorkoutDate ? new Date(data.lastWorkoutDate) : null);
-      setWorkoutHistory(data.workoutHistory || []);
-      setCaloriesConsumed(data.caloriesConsumed || 0);
-      setCaloriesBurned(data.caloriesBurned || 0);
-      setDailyCalorieGoal(data.dailyCalorieGoal || 2000);
-      setCalorieEntries(data.calorieEntries || []);
+      try {
+        const data = JSON.parse(savedData);
+        setCurrentStreak(data.currentStreak || 0);
+        setLongestStreak(data.longestStreak || 0);
+        setLastWorkoutDate(data.lastWorkoutDate ? new Date(data.lastWorkoutDate) : null);
+        setWorkoutHistory(data.workoutHistory || []);
+        setCaloriesConsumed(data.caloriesConsumed || 0);
+        setCaloriesBurned(data.caloriesBurned || 0);
+        setDailyCalorieGoal(data.dailyCalorieGoal || 2000);
+        setCalorieEntries(data.calorieEntries || []);
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+        // Reset to default values if data is corrupted
+        localStorage.removeItem('fitStreakData');
+      }
     }
     checkStreakReset();
   }, []);
@@ -91,7 +97,8 @@ function App() {
     };
     
     checkMidnight();
-    const interval = setInterval(checkMidnight, 60000); // Check every minute
+    // Check every 10 minutes for efficiency
+    const interval = setInterval(checkMidnight, 600000);
     return () => clearInterval(interval);
   }, []);
 
@@ -179,7 +186,7 @@ function App() {
     
     // Add to workout history
     const workout = {
-      id: Date.now(),
+      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
       date: today.toISOString(),
       exercises: selectedExercises.map(e => ({
         name: e.name,
@@ -197,8 +204,7 @@ function App() {
     // Clear selection
     setSelectedExercises([]);
     
-    // Show confirmation and switch to home
-    alert(`🎉 Workout logged! ${selectedExercises.length} exercises, ${totalCalories} calories burned!`);
+    // Switch to home (confirmation will be visible in the activity log)
     setActiveTab('home');
   };
 
@@ -207,7 +213,7 @@ function App() {
     if (!calorieInputValue || isNaN(calorieInputValue) || Number(calorieInputValue) <= 0) return;
     
     const entry = {
-      id: Date.now(),
+      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
       calories: Number(calorieInputValue),
       meal: mealTag || 'Snack',
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
