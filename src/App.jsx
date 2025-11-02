@@ -457,7 +457,7 @@ function App() {
     return (
       <div className="pb-32">
         {/* Header */}
-        <div className="bg-white shadow-md p-4 sticky top-0 z-10">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sticky top-0 z-10">
           <h1 className="text-2xl font-bold text-gray-800 mb-3">Exercise Library</h1>
           
           {/* Search */}
@@ -488,10 +488,10 @@ function App() {
               <button
                 key={bodyPart}
                 onClick={() => setSelectedBodyPart(bodyPart)}
-                className={`px-4 py-2 rounded-full whitespace-nowrap ${
+                    className={`px-4 py-2 rounded-full whitespace-nowrap ${
                   selectedBodyPart === bodyPart
                     ? 'bg-orange-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/5'
                 }`}
               >
                 {bodyPart}
@@ -516,8 +516,8 @@ function App() {
                       onClick={() => toggleExercise(bodyPart, exercise)}
                       className={`p-4 rounded-lg border-2 transition-all text-left ${
                         isSelected
-                          ? 'border-orange-500 bg-orange-50'
-                          : 'border-gray-200 bg-white hover:border-orange-300'
+                          ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
+                          : 'border-gray-200 bg-white hover:bg-gray-100 dark:border-gray-700 dark:bg-[#0f1724] dark:hover:bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -781,7 +781,7 @@ function App() {
 
   // Main render
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-50">
+    <div className="min-h-screen">
       {/* Content */}
       <div className="max-w-2xl mx-auto">
         {activeTab === 'home' && renderHome()}
@@ -792,7 +792,7 @@ function App() {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+  <nav className="fixed bottom-0 left-0 right-0 bg-transparent border-t border-gray-200 dark:border-gray-700 shadow-lg">
         <div className="max-w-2xl mx-auto flex justify-around py-2">
           <button
             onClick={() => setActiveTab('home')}

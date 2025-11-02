@@ -12,6 +12,58 @@ body {
 }
 
 #root {
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #fef3c7, #fde68a);
+  /* Darker purple gradient background */
+  background: linear-gradient(180deg, #0b0026 0%, #30004a 45%, #09000c 100%);
+  color-scheme: dark;
 }
+
+/* Dark-mode overrides for common Tailwind utility classes.
+   This approach uses higher-specificity rules under the .dark root to
+   transform the existing utility classes (bg-white, text-gray-800, etc.)
+   into dark-theme equivalents without changing every JSX className. */
+.dark body,
+.dark #root {
+  /* Even deeper purple for explicit dark mode */
+  background: linear-gradient(180deg, #050011 0%, #22002f 50%, #000005 100%);
+}
+
+/* Background utilities */
+.dark .bg-white { background-color: #0f1724 !important; }
+.dark .bg-gray-50 { background-color: #0b1220 !important; }
+.dark .bg-gray-200 { background-color: rgba(255,255,255,0.03) !important; }
+.dark .bg-orange-50 { background-color: rgba(255,165,0,0.06) !important; }
+
+/* Border utilities */
+.dark .border-gray-200 { border-color: rgba(255,255,255,0.06) !important; }
+.dark .border-gray-300 { border-color: rgba(255,255,255,0.04) !important; }
+
+/* Text utilities (muted -> lighter in dark) */
+.dark .text-gray-800 { color: #e6eef8 !important; }
+.dark .text-gray-700 { color: #d0d8e3 !important; }
+.dark .text-gray-600 { color: #aab3bf !important; }
+.dark .text-gray-500 { color: #94a0ad !important; }
+.dark .text-gray-400 { color: #6e7b88 !important; }
+
+/* Gradient utilities (map the purple -> deep purple/navy tones) */
+.dark .from-purple-100 { --tw-gradient-from: #2b1b38 !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(43,27,56,0)) !important; }
+.dark .to-purple-200 { --tw-gradient-to: #191128 !important; }
+
+/* Inputs / subtle controls */
+.dark input, .dark textarea, .dark select {
+  background-color: transparent;
+  color: #e6eef8;
+}
+
+/* Ensure subtle light accents (orange/green) remain visible on dark */
+.dark .text-orange-600 { color: #fb923c !important; }
+.dark .text-green-600 { color: #34d399 !important; }
+
+/* Make utility hover backgrounds visible in dark mode */
+.dark .hover\:bg-gray-300:hover { background-color: rgba(255,255,255,0.04) !important; }
+.dark .hover\:bg-gray-200:hover { background-color: rgba(255,255,255,0.03) !important; }
+
+/* Slight tweak for card-like regions to keep contrast */
+.dark .shadow-lg { box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+
+/* Add focus ring visibility in dark mode */
+.dark .focus\:ring-orange-500:focus { box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
